@@ -14,6 +14,7 @@ By default, the Vagrant setup will create a single kubernetes-master and 1 kuber
 cd kubernetes
 
 export KUBERNETES_PROVIDER=vagrant
+export http_proxy=http://proxy.host.com:3128/ #if you use proxy for connect to internet
 cluster/kube-up.sh
 ```
 

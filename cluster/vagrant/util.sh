@@ -90,6 +90,10 @@ function create-provision-scripts {
       echo "MINION_CONTAINER_NETMASK='${MINION_CONTAINER_NETMASKS[$i]}'"
       echo "CONTAINER_SUBNET='${CONTAINER_SUBNET}'"
       echo "DOCKER_OPTS='${EXTRA_DOCKER_OPTS-}'"
+      if [ -n "${http_proxy+x}" ]
+        then
+        echo "HTTP_PROXY='${http_proxy}'"
+        fi
       grep -v "^#" "${KUBE_ROOT}/cluster/vagrant/provision-minion.sh"
       grep -v "^#" "${KUBE_ROOT}/cluster/vagrant/provision-network.sh"
     ) > "${KUBE_TEMP}/minion-start-${i}.sh"

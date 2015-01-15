@@ -94,6 +94,10 @@ grep -q kbr0 /etc/sysconfig/docker || {
   # modify the docker service file such that it uses the kube docker bridge and not its own
   #echo "OPTIONS=-b=kbr0 --iptables=false --selinux-enabled" > /etc/sysconfig/docker
   echo "OPTIONS='-b=kbr0 --iptables=false --selinux-enabled ${DOCKER_OPTS}'" >/etc/sysconfig/docker
+  if [ -n $HTTP_PROXY ]
+    then
+    echo "http_proxy=${HTTP_PROXY}" >> /etc/sysconfig/docker
+  fi
   systemctl daemon-reload
   systemctl restart docker.service
 
