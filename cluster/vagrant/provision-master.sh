@@ -175,6 +175,10 @@ EOF
   # -N does not install the minion
   curl -sS -L --connect-timeout 20 --retry 6 --retry-delay 10 https://bootstrap.saltstack.com | sh -s -- -M -N
 
+  yum install etcd -y
+  echo "name=\"test\"" >> /etc/etcd/etcd.conf
+  systemctl start etcd
+
   # Install salt-api
   #
   # This is used to provide the network transport for salt-api
