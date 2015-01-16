@@ -304,8 +304,32 @@ function kube::build::build_image() {
   kube::version::get_version_vars
   kube::version::save_version_vars "${build_context_dir}/kube-version-defs"
 
+  kube::prepare::dockerfile::proxy
   cp build/build-image/Dockerfile ${build_context_dir}/Dockerfile
   kube::build::docker_build "${KUBE_BUILD_IMAGE}" "${build_context_dir}"
+}
+
+# prepare proxy support if defined http_proxy variable
+function kube::prepare::dockerfile::proxy() {
+  if [ -n "${http_proxy} + x" ]
+  then
+     # Get the code coverage tool and godep
+     #
+     proxy_var=$(echo $http_proxy | sed 's/\([\:\/]\)/\\\1/g')
+    sed -i 's/^RUN go get code.google.com.*/\
+ENV HTTP_PROXY '"$proxy_var"'\n\
+ENV HTTPS_PROXY '"$proxy_var"'\n\
+ENV http_proxy '"$proxy_var"'\n\
+ENV host '"$proxy_var"'\
+RUN git config --global http.proxy '"$proxy_var"' \&\& go get github.com\/tools\/godep\
+RUN git config --global http.proxy '"$proxy_var"' \&\& go get golang.org\/x\/tools\/cmd\/cover\n\
+/' build/build-image/Dockerfile
+    if [ $(vagrant  plugin list | grep -c vagrant-proxyconf) -eq 0 ]
+    then
+      vagrant plugin install vagrant-proxyconf
+    fi
+
+  fi
 }
 
 # Build the kubernetes golang cross base image.

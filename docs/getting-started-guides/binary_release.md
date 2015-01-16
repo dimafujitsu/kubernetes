@@ -19,5 +19,9 @@ git clone https://github.com/GoogleCloudPlatform/kubernetes.git
 cd kubernetes
 make release
 ```
+if require working behind proxy - define bash variable before build release
+```bash
+export http_proxy=http://proxyhost:3128/
+```
 
 For more details on the release process see the [`build/` directory](../../build)
